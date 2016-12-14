@@ -5,6 +5,17 @@ import java.util.Arrays;
 
 public class DBpediaFunctions {
 
+    public static ArrayList<String> latFunction(String lat, String latDegrees, String latMinutes, String latSeconds, String latDirection){
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("50.833332");
+        return result;
+    }
+
+    public static ArrayList<String> lonFunction(String lat, String latDegrees, String latMinutes, String latSeconds, String latDirection){
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("4.000000");
+        return result;
+    }
 
     public static ArrayList<String> simplePropertyFunction(String property, String factor, String transform, String select, String prefix, String suffix, String unit, String dataType) {
         Double dFactor;
