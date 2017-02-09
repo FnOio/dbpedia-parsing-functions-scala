@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/scala" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -14,5 +16,6 @@
     <orderEntry type="library" exported="" name="scala-sdk-2.11.4" level="application" />
     <orderEntry type="library" exported="" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.scala-lang:scala-xml:2.11.0-M4" level="project" />
+    <orderEntry type="library" name="org.scalatest:scalatest_2.11:2.1.7" level="project" />
   </component>
 </module>
