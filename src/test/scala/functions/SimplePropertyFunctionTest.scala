@@ -25,4 +25,60 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
 
   }
 
+  "A person" should "be parsed correctly" in {
+
+    val property = "spouse=<br />[[Melinda Gates|Melinda Gates]]<br />January 1, 1994<br />"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "Person"
+    val unit = null
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = fn.execute()
+
+    result.head should be ("http://en.dbpedia.org/resource/Melinda_Gates")
+
+  }
+
+  "A currency" should "be parsed correctly" in {
+
+    val property = "net_worth=US$85.2 billion (January 28th, 2017)"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "Currency"
+    val unit = null
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = fn.execute()
+
+    result.head should be ("8.52E10")
+
+  }
+
+  "A string" should "be parsed correctly" in {
+
+    val property = "William Henry Gates III"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "rdf:langString"
+    val unit = null
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = fn.execute()
+
+    result.head should be ("William Henry Gates III")
+
+  }
+
+
+
 }
