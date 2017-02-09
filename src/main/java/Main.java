@@ -1,10 +1,44 @@
-import functions.SimplePropertyFunction;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+import functions.*;
 
 /**
  * Created by wmaroy on 15.11.16.
+ *
+ * This is a testing class
+ *
  */
 public class Main {
     public static void main(String[] args) {
+
+
+        /**
+         * Testing DateIntervalFunctions
+         */
+
+        StartDateFunction startFn = new StartDateFunction("years_active=1975–present\n", "activeYearsStartYear");
+        String output =  startFn.execute();
+
+        /**
+         * Testing equals function
+         */
+
+        EqualsFunction equalsFunction = new EqualsFunction("type=city","city");
+        Boolean equalsFunctionResult = equalsFunction.execute();
+
+        /**
+         * Testing lon function
+         */
+
+        //LonFunction lonFunction = new LonFunction(null, "longd=151", "longm=12",null,null);
+        //String[] lonResults = lonFunction.execute();
+
+        /**
+         * Testing lat function
+         */
+
+        //LatFunction latFunction = new LatFunction(null, "latd=33", "latm=51", null, null);
+        //String[] latResults = latFunction.execute();
+
 
         String test = "|conventional_long_name = Kingdom of Belgium\n" +
                 "|native_name = {{vunblist|item_style=font-size:88%; |{{native name|nl|Koninkrijk België}} |{{native name|fr|Royaume de Belgique}} |{{native name|de|Königreich Belgien}}}}\n" +

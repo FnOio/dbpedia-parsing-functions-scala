@@ -5,17 +5,17 @@ import java.io.{File, FileOutputStream}
 import java.util
 
 import scala.collection.mutable.ListBuffer
-import dataparsers._
-import dataparsers.util.{Language, Redirects, XMLSource}
-import dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
-import dataparsers.util.wikiparser.{Namespace, WikiTitle}
+import dbpedia.dataparsers._
+import dbpedia.dataparsers.util.{Language, Redirects, XMLSource}
+import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
+import dbpedia.dataparsers.util.wikiparser.{Namespace, WikiTitle}
 
 import scala.language.reflectiveCalls
 import scala.collection.JavaConverters._
-import dataparsers.ontology.datatypes._
-import dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes}
-import dataparsers.ontology.io.OntologyReader
-import dataparsers.util.wikiparser.impl.wikipedia.Redirect
+import dbpedia.dataparsers.ontology.datatypes._
+import dbpedia.dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes}
+import dbpedia.dataparsers.ontology.io.OntologyReader
+import dbpedia.dataparsers.util.wikiparser.impl.wikipedia.Redirect
 import org.apache.commons.io.FileUtils
 
 
@@ -27,7 +27,7 @@ class SimplePropertyFunction(
   val transform : String, // rml mappings require this to be public (e.g. ModelMapper)
   val factor : Double,  // rml mappings require this to be public (e.g. ModelMapper)
   val datatype : String,
-  val unit :  String) {
+  val unit :  String) extends Function {
 
   private val ontologyStream =  this.getClass.getClassLoader.getResourceAsStream("ontology.xml")
   private val tempFile : File = File.createTempFile("ontology_temp", ".xml")
@@ -36,7 +36,6 @@ class SimplePropertyFunction(
 
   private val ontologySource = XMLSource.fromFile(tempFile, Language.English)
   private val ontologyObject = new OntologyReader().read(ontologySource)
-
 
   val dt = try {
       ontologyObject.datatypes(datatype)
@@ -53,9 +52,10 @@ class SimplePropertyFunction(
 
     private val language = Language.English
     private val wikiparser = new SimpleWikiParser
+
     val context = new {
       val language : Language = Language.English
-      val redirects : Redirects = null
+      val redirects : Redirects = new Redirects(Map())
       val ontology : Ontology = new Ontology(null,null,OntologyDatatypes.load().map(t => (t.name, t)).toMap,null,null,null)
     }
 
@@ -96,7 +96,6 @@ class SimplePropertyFunction(
     }
 
     val languageResourceNamespace = language.resourceUri.namespace
-
 
     private val parser : DataParser = dt match
         {
