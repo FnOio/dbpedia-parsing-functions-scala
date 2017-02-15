@@ -1,17 +1,14 @@
 package dbpedia.dataparsers.util.wikiparser.impl.simple
 
 
-import java.net.{URI, URISyntaxException}
-import java.util.logging.{Level, Logger}
-import scala.collection.JavaConverters._
 import SimpleWikiParser._
-import dbpedia.dataparsers.util.{Language, UriUtils}
+import dbpedia.dataparsers.util.{Language, UriUtils, WikiUtil}
 import dbpedia.dataparsers.util.wikiparser.impl.wikipedia.{Disambiguation, Redirect}
 import dbpedia.dataparsers.util.wikiparser._
 import java.net.{URI, URISyntaxException}
 import java.util.logging.{Level, Logger}
-
 import dbpedia.dataparsers.util.RichString.wrapString
+
 
 object SimpleWikiParser
 {
@@ -101,9 +98,9 @@ class SimpleWikiParser extends WikiParser
 
     }
 
-    def parseString(string:String): PropertyNode = {
-      //parseUntil(new Matcher(List(), true), new Source(string, Language.Commons), 0).asJava
-      parseProperty(new Source(string, Language.English), "unknown", 0)
+    def parseString(string:String): List[Node] = {
+      parseUntil(new Matcher(List(), true), new Source(string, Language.English), 0)
+      //parseProperty(new Source(string, Language.English), "unknown", 0)
     }
 
     private def findTemplate(node : Node, names : Set[String], language : Language) : Boolean = node match
@@ -546,7 +543,7 @@ class SimpleWikiParser extends WikiParser
         throw new WikiParserException("Template not closed", startLine, source.findLine(startLine))
     }
 
-    private def parseProperty(source : Source, defaultKey : String, level : Int) : PropertyNode =
+    def parseProperty(source : Source, defaultKey : String, level : Int) : PropertyNode =
     {
         val line = source.line
         var nodes = parseUntil(propertyValueOrEnd, source, level)
@@ -561,11 +558,15 @@ class SimpleWikiParser extends WikiParser
             key = nodes.head.retrieveText.get.trim
 
             //Parse the corresponding value
-            nodes = parseUntil(propertyEnd, source, level);
+            nodes = parseUntil(propertyEnd, source, level)
         }
         
         PropertyNode(key, nodes, line)
     }
+
+  def parseProperty(property : String) : PropertyNode = {
+    parseProperty(new Source(property, Language.English), "unknown", 0)
+  }
 
     private def parseParserFunction(decodedName : String, source : Source, level : Int) : ParserFunctionNode =
     {

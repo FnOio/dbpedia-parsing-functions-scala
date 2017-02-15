@@ -2,6 +2,7 @@ package functions
 
 import org.scalatest.{FlatSpec, Matchers}
 
+
 /**
   * Tests for the SimplePropertyFunction
   */
@@ -15,10 +16,10 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val suffix = null
     val transform = null
     val factor = 1.0
-    val datatype =  "xsd:date"
+    val ontologyProperty = "birthDate"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, ontologyProperty, unit)
     val result = fn.execute()
 
     result.head should be ("1955-10-28")
@@ -33,7 +34,7 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val suffix = null
     val transform = null
     val factor = 1.0
-    val datatype =  "Person"
+    val datatype =  "spouse"
     val unit = null
 
     val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
@@ -51,7 +52,7 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val suffix = null
     val transform = null
     val factor = 1.0
-    val datatype =  "Currency"
+    val datatype =  "networth"
     val unit = null
 
     val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
@@ -59,6 +60,23 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
 
     result.head should be ("8.52E10")
 
+  }
+
+  "A currency" should "be parsed correctly again" in {
+
+    val property = "[[{{#property:p38}}]] ($)"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "Currency"
+    val unit = null
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = fn.execute()
+
+    result.length should be (0)
   }
 
   "A string" should "be parsed correctly" in {
@@ -69,7 +87,7 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val suffix = null
     val transform = null
     val factor = 1.0
-    val datatype =  "rdf:langString"
+    val datatype =  "birthName"
     val unit = null
 
     val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)

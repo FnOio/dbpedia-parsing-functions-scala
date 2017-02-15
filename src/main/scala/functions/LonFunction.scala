@@ -83,7 +83,7 @@ class LonFunction(
     */
   private def parsePropertyString(property : String) : PropertyNode = {
     if(property!=null) {
-      wikiparser.parseString(property)
+      wikiparser.parseString(property).head.asInstanceOf[PropertyNode]
     } else null
   }
 

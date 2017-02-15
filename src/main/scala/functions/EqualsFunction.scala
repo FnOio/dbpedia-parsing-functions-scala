@@ -1,6 +1,7 @@
 package functions
 
 import dbpedia.dataparsers.StringParser
+import dbpedia.dataparsers.util.wikiparser.PropertyNode
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
 
 /**
@@ -13,7 +14,7 @@ class EqualsFunction(property : String, value : String) extends Function {
 
   def execute() : Boolean = {
 
-    val propertyText = StringParser.parse(node)
+    val propertyText = StringParser.parse(node.head.asInstanceOf[PropertyNode])
     propertyText.get.equals(value)
 
   }

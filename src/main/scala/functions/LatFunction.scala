@@ -64,7 +64,7 @@ class LatFunction(
       } else "N"
 
       val latitude = new Latitude(degreesValue, minutesValue, secondsValue, directionValue)
-
+      val toDouble = latitude.toDouble
       Array(latitude.toDouble.toString)
 
     }
@@ -80,7 +80,7 @@ class LatFunction(
     */
   private def parsePropertyString(property : String) : PropertyNode = {
       if(property!=null) {
-        wikiparser.parseString(property)
+        wikiparser.parseString(property).head.asInstanceOf[PropertyNode]
       } else null
     }
 

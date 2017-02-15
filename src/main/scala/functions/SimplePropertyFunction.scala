@@ -8,17 +8,18 @@ import scala.collection.mutable.ListBuffer
 import dbpedia.dataparsers._
 import dbpedia.dataparsers.util.{Language, Redirects, XMLSource}
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
-import dbpedia.dataparsers.util.wikiparser.{Namespace, WikiTitle}
+import dbpedia.dataparsers.util.wikiparser.{Namespace, PropertyNode, WikiParser, WikiTitle}
+import dbpedia.dataparsers.util.wikiparser.impl.simple.Source
+import dbpedia.dataparsers.ontology.io._
 
 import scala.language.reflectiveCalls
 import scala.collection.JavaConverters._
 import dbpedia.dataparsers.ontology.datatypes._
-import dbpedia.dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes}
-import dbpedia.dataparsers.ontology.io.OntologyReader
+import dbpedia.dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes, OntologyProperty}
 import dbpedia.dataparsers.util.wikiparser.impl.wikipedia.Redirect
 import org.apache.commons.io.FileUtils
 
-
+//TODO change datatype parameter here and in mapping files
 class SimplePropertyFunction(
   val templateProperty : String, // IntermediateNodeMapping and CreateMappingStats requires this to be public
   val select : String,  // rml mappings require this to be public (e.g. ModelMapper)
@@ -34,11 +35,15 @@ class SimplePropertyFunction(
   tempFile.deleteOnExit()
   FileUtils.copyInputStreamToFile(ontologyStream, tempFile)
 
-  private val ontologySource = XMLSource.fromFile(tempFile, Language.English)
-  private val ontologyObject = new OntologyReader().read(ontologySource)
+  private val ontologySource = XMLSource.fromFile(tempFile, Language.Mappings)
+  //private val ontologyObject = new OntologyReader.scala().read(ontologySource)
 
-  val dt = try {
-      ontologyObject.datatypes(datatype)
+  private val values = ontologySource.map(WikiParser.getInstance()).flatten.map(page => (page.title, page)).toMap
+  private val ontologyObject = new OntologyReader().read(values.values)
+
+
+  private val ontologyProperty = try {
+      ontologyObject.properties(datatype)
     } catch {
       case _ : Exception => null
     }
@@ -95,86 +100,83 @@ class SimplePropertyFunction(
         p + value.trim + s
     }
 
-    val languageResourceNamespace = language.resourceUri.namespace
+    private val languageResourceNamespace = language.resourceUri.namespace
 
-    private val parser : DataParser = dt match
-        {
-      case null =>
-        if (datatype == "foaf:homepage") {
-          checkMultiplicationFactor("foaf:homepage")
-          new LinkParser()
-        }
-        else {
-          new ObjectParser(context)
-        }
-      case d : UnitDatatype      => new UnitValueParser(context, if(ut != null) ut else d , multiplicationFactor = factor)
-      case d : DimensionDatatype => new UnitValueParser(context, if(ut != null) ut else d, multiplicationFactor = factor)
-      case d : EnumerationDatatype =>
-      {
-        checkMultiplicationFactor("EnumerationDatatype")
-        new EnumerationParser(d)
-      }
-      case dt : Datatype => dt.name match
-      {
-        case "owl:Thing" =>
-          if (dt.name == "foaf:homepage") {
+    private val parser : DataParser =
+      if(ontologyProperty != null) {
+      ontologyProperty.range match {
+        case c: OntologyClass =>
+          if (ontologyProperty.name == "foaf:homepage") {
             checkMultiplicationFactor("foaf:homepage")
             new LinkParser()
           }
           else {
             new ObjectParser(context)
           }
-        case "xsd:integer" => new IntegerParser(context, multiplicationFactor = factor)
-        case "xsd:positiveInteger"    => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i > 0))
-        case "xsd:nonNegativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i >=0))
-        case "xsd:nonPositiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i <=0))
-        case "xsd:negativeInteger"    => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i < 0))
-        case "xsd:double" => new DoubleParser(context, multiplicationFactor = factor)
-        case "xsd:float" => new DoubleParser(context, multiplicationFactor = factor)
-        case "xsd:string" => // strings with no language tags
-        {
-          checkMultiplicationFactor("xsd:string")
-          StringParser
+        case d: UnitDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
+        case d: DimensionDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
+        case d: EnumerationDatatype => {
+          checkMultiplicationFactor("EnumerationDatatype")
+          new EnumerationParser(d)
         }
-        case "rdf:langString" => // strings with language tags
-        {
-          checkMultiplicationFactor("rdf:langString")
-          StringParser
+        case dt: Datatype => dt.name match {
+          case "owl:Thing" =>
+            if (dt.name == "foaf:homepage") {
+              checkMultiplicationFactor("foaf:homepage")
+              new LinkParser()
+            }
+            else {
+              new ObjectParser(context)
+            }
+          case "xsd:integer" => new IntegerParser(context, multiplicationFactor = factor)
+          case "xsd:positiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i > 0))
+          case "xsd:nonNegativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i >= 0))
+          case "xsd:nonPositiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i <= 0))
+          case "xsd:negativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i < 0))
+          case "xsd:double" => new DoubleParser(context, multiplicationFactor = factor)
+          case "xsd:float" => new DoubleParser(context, multiplicationFactor = factor)
+          case "xsd:string" => // strings with no language tags
+          {
+            checkMultiplicationFactor("xsd:string")
+            StringParser
+          }
+          case "rdf:langString" => // strings with language tags
+          {
+            checkMultiplicationFactor("rdf:langString")
+            StringParser
+          }
+          case "xsd:anyURI" => {
+            checkMultiplicationFactor("xsd:anyURI")
+            new LinkParser(false)
+          }
+          case "xsd:date" => {
+            checkMultiplicationFactor("xsd:date")
+            new DateTimeParser(context, dt)
+          }
+          case "xsd:gYear" => {
+            checkMultiplicationFactor("xsd:gYear")
+            new DateTimeParser(context, dt)
+          }
+          case "xsd:gYearMonth" => {
+            checkMultiplicationFactor("xsd:gYearMonth")
+            new DateTimeParser(context, dt)
+          }
+          case "xsd:gMonthDay" => {
+            checkMultiplicationFactor("xsd:gMonthDay")
+            new DateTimeParser(context, dt)
+          }
+          case "xsd:boolean" => {
+            checkMultiplicationFactor("xsd:boolean")
+            BooleanParser
+          }
+          case name => null
         }
-        case "xsd:anyURI" =>
-        {
-          checkMultiplicationFactor("xsd:anyURI")
-          new LinkParser(false)
-        }
-        case "xsd:date" =>
-        {
-          checkMultiplicationFactor("xsd:date")
-          new DateTimeParser(context, dt)
-        }
-        case "xsd:gYear" =>
-        {
-          checkMultiplicationFactor("xsd:gYear")
-          new DateTimeParser(context, dt)
-        }
-        case "xsd:gYearMonth" =>
-        {
-          checkMultiplicationFactor("xsd:gYearMonth")
-          new DateTimeParser(context, dt)
-        }
-        case "xsd:gMonthDay" =>
-        {
-          checkMultiplicationFactor("xsd:gMonthDay")
-          new DateTimeParser(context, dt)
-        }
-        case "xsd:boolean" =>
-        {
-          checkMultiplicationFactor("xsd:boolean")
-          BooleanParser
-        }
-        case name => throw new IllegalArgumentException("Not implemented range " + name + " of property " + templateProperty)
+        case other => null
       }
-      case other => throw new IllegalArgumentException("Property " + templateProperty + " does have invalid range " + other)
-        }
+    } else {
+        null
+    }
+
 
 
     private def checkMultiplicationFactor(datatypeName : String)
@@ -186,24 +188,25 @@ class SimplePropertyFunction(
     }
 
     def execute(): Array[String] = {
-      val node = wikiparser.parseString(templateProperty)
+      val node = wikiparser.parseProperty(templateProperty)
       var result = new ListBuffer[String]
-      val parseResults = parser.parsePropertyNode(node,true, transform, valueTransformer)
-      for(parseResult <- selector(parseResults)) {
-        val g = parseResult match
-        {
-          case (value : Double, unit : UnitDatatype) => {
-            if(unit.isInstanceOf[InconvertibleUnitDatatype]) {
-              value.toString
-            } else {
-              unit.toStandardUnit(value).toString
-            }
-          }
-          case value => value.toString
-        }
-        result += g
-      }
+      if(parser != null) {
 
+        val parseResults = parser.parsePropertyNode(node, true, transform, valueTransformer)
+        for (parseResult <- selector(parseResults)) {
+          val g = parseResult match {
+            case (value: Double, unit: UnitDatatype) => {
+              if (unit.isInstanceOf[InconvertibleUnitDatatype]) {
+                value.toString
+              } else {
+                unit.toStandardUnit(value).toString
+              }
+            }
+            case value => value.toString
+          }
+          result += g
+        }
+      }
       result.toArray
 
     }

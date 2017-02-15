@@ -1,6 +1,7 @@
 package functions
 
 import dbpedia.dataparsers.StringParser
+import dbpedia.dataparsers.util.wikiparser.PropertyNode
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
 
 /**
@@ -12,7 +13,7 @@ class ContainsFunction(property : String, value : String) extends Function {
 
   def execute(): Boolean = {
     val propertyNode = wikiparser.parseString(property)
-    val parsedNode = StringParser.parse(propertyNode)
+    val parsedNode = StringParser.parse(propertyNode.head.asInstanceOf[PropertyNode])
     parsedNode.contains(value)
   }
 

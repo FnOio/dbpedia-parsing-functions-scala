@@ -31,9 +31,19 @@ public class DBpediaFunctions {
         }
         try {
             SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor,dataType,unit);
+            System.out.println("-----------------PARAMETERS--------------------------");
+            System.out.println("\nSimplePropertyFunction");
+            System.out.println("Property: " + property);
+            System.out.println("Select: " + select);
+            System.out.println("Preficx: " + prefix);
+            System.out.println("Suffix: " + suffix);
+            System.out.println("Transform: " + transform);
+            System.out.println("Factor: " + dFactor);
+            System.out.println("Datatype: " + dataType);
+            System.out.println("Unit: " + unit);
             return new ArrayList<String>(Arrays.asList(fn.execute()));
         } catch(Exception e) {
-            System.err.println("-------------------------------------------");
+            System.out.println("-------------------------------------------");
             System.err.println("\nSimplePropertyFunction exception: " + e);
             System.err.println("Property: " + property);
             System.err.println("Select: " + select);
@@ -42,6 +52,7 @@ public class DBpediaFunctions {
             System.err.println("Transform: " + transform);
             System.err.println("Factor: " + dFactor);
             System.err.println("Datatype: " + dataType);
+            System.err.println("Unit: " + unit);
             System.err.println("Stacktrace:");
             e.printStackTrace();
         }
@@ -62,6 +73,13 @@ public class DBpediaFunctions {
     public static ArrayList<String> latFunction(String coordinate, String latitude, String degrees, String minutes, String seconds, String direction) {
         try {
             LatFunction fn = new LatFunction(coordinate, latitude, degrees, minutes, seconds, direction);
+            System.out.println("-------------------------------------------");
+            System.out.println("LatFunction exception: ");
+            System.out.println("Latitude: " + latitude);
+            System.out.println("Degrees: " + degrees);
+            System.out.println("Minutes: " + minutes);
+            System.out.println("Seconds: " + seconds);
+            System.out.println("Direction: " + direction);
             return new ArrayList<String>(Arrays.asList(fn.execute()));
         } catch(Exception e) {
             System.err.println("-------------------------------------------");

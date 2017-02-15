@@ -131,8 +131,8 @@ object Language extends (String => Language)
       "en",
       "eng",
       // No DBpedia / RDF namespaces for mappings wiki. 
-      "mappings..org",
-      "http://mappings..org",
+      "mappings.dbpedia.org",
+      "http://mappings.dbpedia.org",
       RdfNamespace.MAPPINGS,
       RdfNamespace.MAPPINGS,
       "http://mappings.dbpedia.org",

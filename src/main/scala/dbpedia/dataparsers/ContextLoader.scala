@@ -2,10 +2,10 @@ package dbpedia.dataparsers
 
 import java.io.File
 
-import dbpedia.dataparsers.ontology.{Ontology, OntologyDatatypes,OntologyProperty}
-import dbpedia.dataparsers.ontology.io.OntologyReader
+import dbpedia.dataparsers.ontology.{Ontology, OntologyDatatypes, OntologyProperty}
 import dbpedia.dataparsers.util.{Language, Redirects, XMLSource}
 import org.apache.commons.io.FileUtils
+import dbpedia.dataparsers.ontology.io.OntologyReader
 
 /**
   * Created by wmaroy on 07.02.17.

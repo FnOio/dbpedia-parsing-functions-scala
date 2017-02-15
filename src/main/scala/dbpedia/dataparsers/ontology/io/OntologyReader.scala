@@ -2,13 +2,12 @@ package dbpedia.dataparsers.ontology.io
 
 import java.util.logging.{Level, Logger}
 
-import dbpedia.dataparsers.util.RichString.wrapString
 import dbpedia.dataparsers.ontology.datatypes.{Datatype, DimensionDatatype, UnitDatatype}
 import dbpedia.dataparsers.ontology._
 import dbpedia.dataparsers.util.{Language, RdfNamespace, Source}
 import dbpedia.dataparsers.util.wikiparser._
+import dbpedia.dataparsers.util.RichString.wrapString
 
-import scala.language.reflectiveCalls
 
 /**
   * Loads an ontology from configuration files using the DBpedia mapping language.
@@ -72,7 +71,7 @@ class OntologyReader
 
       if(templateName == OntologyReader.CLASSTEMPLATE_NAME)
       {
-        val name = getName(page.title, _.capitalize(page.title.language.locale)) //page.title.language.locale?
+        val name = getName(page.title, _.capitalize(page.title.language.locale))
 
         ontologyBuilder.classes ::= loadClass(name, templateNode)
         // Fill the equivalentClass map
@@ -137,9 +136,9 @@ class OntologyReader
     * @return clean name, including lower-case namespace and clean local name
     * @throws IllegalArgumentException
     */
-  private def getName(title : WikiTitle, clean: String => Any): String = title.encoded.split("/|:", 2) match
+  private def getName(title : WikiTitle, clean: String => String): String = title.encoded.split("/|:", 2) match
   {
-    case Array(name) => clean(name).toString
+    case Array(name) => clean(name)
     case Array(namespace, name) => namespace.toLowerCase(title.language.locale) + ":" + clean(name)
     case _ => throw new IllegalArgumentException("Invalid name: " + title)
   }
