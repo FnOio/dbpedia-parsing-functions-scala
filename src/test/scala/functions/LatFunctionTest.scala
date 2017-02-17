@@ -23,4 +23,20 @@ class LatFunctionTest extends FlatSpec with Matchers {
 
   }
 
+  "A latitude" should "be parsed correctly again" in {
+
+    val coordinate = null
+    val latitude = null
+    val degrees = null
+    val minutes = "latm=51"
+    val seconds = "lats=54"
+    val direction = null
+
+    val fn = new LatFunction(null, latitude, degrees, minutes, seconds, direction)
+    val result = fn.execute()
+
+    result.head should be (null)
+
+  }
+
 }

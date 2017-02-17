@@ -33,42 +33,99 @@ class LatFunction(
     val secondsProperty = parsePropertyString(seconds)
     val directionProperty = parsePropertyString(direction)
 
-    if(coordinate != null) {    // coordinate is given as a parameter
+    if(coordinateProperty != null) {
 
-      val geoCoordinate = geoCoordinateParser.parse(coordinateProperty)
-      Array(geoCoordinate.get.latitude.toString)
+      // coordinate is given as a parameter
+      calculateLatitudeFromCoordinate(coordinateProperty)
 
-    } else if(latitudeProperty != null) {   // latitude is given as a parameter
+    } else if(latitudeProperty != null) {
 
-      val lat = getSingleCoordinate(latitudeProperty, -90.0, 90.0, wikiCode);
-
-      Array(lat.get.toString)
+      // latitude is given as a parameter
+      calculateLatitude(latitudeProperty)
 
     } else {
 
       //Latitude is given as separate properties
-      val degreesValue = if(degreesProperty != null) {
-        doubleParser.parse(degreesProperty).getOrElse(0.0)
-      } else 0.0
 
-      val minutesValue = if(minutesProperty != null) {
-        doubleParser.parse(minutesProperty).getOrElse(0.0)
-      } else 0.0
+      val degreesValue =  parseDouble(degreesProperty)
 
-      val secondsValue = if(secondsProperty != null) {
-        doubleParser.parse(secondsProperty).getOrElse(0.0)
-      } else 0.0
+      val minutesValue = parseDouble(minutesProperty)
 
-      val directionValue = if(directionProperty != null) {
-        stringParser.parse(directionProperty).getOrElse("N")
-      } else "N"
+      val secondsValue = parseDouble(secondsProperty)
 
-      val latitude = new Latitude(degreesValue, minutesValue, secondsValue, directionValue)
-      val toDouble = latitude.toDouble
-      Array(latitude.toDouble.toString)
+      val directionValue = parseDirection(directionProperty)
+
+      calculateLatitude(degreesValue, minutesValue, secondsValue, directionValue)
 
     }
 
+  }
+
+  /**
+    * Parses a double from a Property Node
+    * @param property
+    * @return
+    */
+  def parseDouble(property : PropertyNode) : Double = {
+    if(property != null) {
+      doubleParser.parse(property).getOrElse(0.0)
+    } else 0.0
+  }
+
+  /**
+    * Parses a direction string from a Property Node
+    * @param directionProperty
+    * @return
+    */
+  def parseDirection(directionProperty : PropertyNode) : String = {
+    if(directionProperty != null) {
+      stringParser.parse(directionProperty).getOrElse("N")
+    } else "N"
+  }
+
+
+  /**
+    * Returns an array filled with a string that represents the latitude
+    * Input is a property node with the coordinate value, latitude will be parsed from this
+    * @param coordinate
+    * @return
+    */
+  def calculateLatitudeFromCoordinate(coordinate : PropertyNode) : Array[String] = {
+    val geoCoordinate = geoCoordinateParser.parse(coordinate)
+    Array(geoCoordinate.get.latitude.toString)
+  }
+
+  /**
+    * Returns an array filled with a string that represent the latitude
+    * Input is a property node with the latitude value
+    * @param latitude
+    * @return
+    */
+  def calculateLatitude(latitude : PropertyNode) : Array[String] = {
+    val lat = getSingleCoordinate(latitude, -90.0, 90.0, wikiCode)
+    Array(lat.get.toString)
+  }
+
+  /**
+    * Return an array filled with a string that represents the latitude
+    *
+    * @param degrees
+    * @param minutes
+    * @param seconds
+    * @param direction
+    * @return
+    */
+  def calculateLatitude(degrees : Double, minutes : Double, seconds : Double, direction : String) : Array[String] = {
+    degrees match {
+
+      //do not allow degrees that are 0.0, this means that the degree param has not been set
+      case 0.0 => Array(null)
+
+      case other =>
+        val latitude = new Latitude(degrees, minutes, seconds, direction)
+        Array(latitude.toDouble.toString)
+
+    }
   }
 
   /**
@@ -80,7 +137,7 @@ class LatFunction(
     */
   private def parsePropertyString(property : String) : PropertyNode = {
       if(property!=null) {
-        wikiparser.parseString(property).head.asInstanceOf[PropertyNode]
+        wikiparser.parseProperty(property)
       } else null
     }
 

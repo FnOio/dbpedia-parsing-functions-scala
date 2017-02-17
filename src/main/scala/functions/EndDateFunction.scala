@@ -32,7 +32,7 @@ class EndDateFunction(property : String, ontologyPropertyString: String) extends
     * Executes the function
     */
   def execute(): String = {
-    val node = wikiparser.parseString(property).head.asInstanceOf[PropertyNode]
+    val node = wikiparser.parseProperty(property)
     NodeUtil.splitPropertyNode(node, splitPropertyNodeRegex)
       .map( node => extractEndFromInterval(node))
       .dropWhile(e => e.isEmpty).headOption.orNull

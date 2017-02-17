@@ -33,8 +33,8 @@ class StartDateFunction(property : String, ontologyPropertyString: String) exten
     * Executes the function
     */
   def execute() : String = {
-    val node = wikiparser.parseString(property)
-    NodeUtil.splitPropertyNode(node.head.asInstanceOf[PropertyNode], splitPropertyNodeRegex)
+    val node = wikiparser.parseProperty(property)
+    NodeUtil.splitPropertyNode(node, splitPropertyNodeRegex)
       .map( node => extractStartFromInterval(node))
       .dropWhile(e => e.isEmpty).headOption.orNull
   }
