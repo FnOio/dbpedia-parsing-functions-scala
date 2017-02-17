@@ -1,5 +1,6 @@
-package functions
+package functions.geocoordinate
 
+import functions.LatFunction
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
