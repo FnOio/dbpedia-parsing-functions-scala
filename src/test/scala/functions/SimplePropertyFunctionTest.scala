@@ -10,7 +10,7 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
 
   "A date" should "be parsed correctly" in {
 
-    val property = "birth_date={{Birth date and age|1955|10|28}}"
+    val property = "{{Birth date and age|1955|10|28}}"
     val select = null
     val prefix = null
     val suffix = null

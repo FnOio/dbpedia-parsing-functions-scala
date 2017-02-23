@@ -4,6 +4,7 @@ package functions
 import java.io.{File, FileOutputStream}
 import java.util
 
+
 import scala.collection.mutable.ListBuffer
 import dbpedia.dataparsers._
 import dbpedia.dataparsers.util.{Language, Redirects, XMLSource}
@@ -102,80 +103,79 @@ class SimplePropertyFunction(
 
     private val languageResourceNamespace = language.resourceUri.namespace
 
-    private val parser : DataParser =
-      if(ontologyProperty != null) {
-      ontologyProperty.range match {
-        case c: OntologyClass =>
-          if (ontologyProperty.name == "foaf:homepage") {
+    private val parser : DataParser = if(ontologyProperty != null) {
+    ontologyProperty.range match {
+      case c: OntologyClass =>
+        if (ontologyProperty.name == "foaf:homepage") {
+          checkMultiplicationFactor("foaf:homepage")
+          new LinkParser()
+        }
+        else {
+          new ObjectParser(context)
+        }
+      case d: UnitDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
+      case d: DimensionDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
+      case d: EnumerationDatatype => {
+        checkMultiplicationFactor("EnumerationDatatype")
+        new EnumerationParser(d)
+      }
+      case dt: Datatype => dt.name match {
+        case "owl:Thing" =>
+          if (dt.name == "foaf:homepage") {
             checkMultiplicationFactor("foaf:homepage")
             new LinkParser()
           }
           else {
             new ObjectParser(context)
           }
-        case d: UnitDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
-        case d: DimensionDatatype => new UnitValueParser(context, if (ut != null) ut else d, multiplicationFactor = factor)
-        case d: EnumerationDatatype => {
-          checkMultiplicationFactor("EnumerationDatatype")
-          new EnumerationParser(d)
+        case "xsd:integer" => new IntegerParser(context, multiplicationFactor = factor)
+        case "xsd:positiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i > 0))
+        case "xsd:nonNegativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i >= 0))
+        case "xsd:nonPositiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i <= 0))
+        case "xsd:negativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i < 0))
+        case "xsd:double" => new DoubleParser(context, multiplicationFactor = factor)
+        case "xsd:float" => new DoubleParser(context, multiplicationFactor = factor)
+        case "xsd:string" => // strings with no language tags
+        {
+          checkMultiplicationFactor("xsd:string")
+          StringParser
         }
-        case dt: Datatype => dt.name match {
-          case "owl:Thing" =>
-            if (dt.name == "foaf:homepage") {
-              checkMultiplicationFactor("foaf:homepage")
-              new LinkParser()
-            }
-            else {
-              new ObjectParser(context)
-            }
-          case "xsd:integer" => new IntegerParser(context, multiplicationFactor = factor)
-          case "xsd:positiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i > 0))
-          case "xsd:nonNegativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i >= 0))
-          case "xsd:nonPositiveInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i <= 0))
-          case "xsd:negativeInteger" => new IntegerParser(context, multiplicationFactor = factor, validRange = (i => i < 0))
-          case "xsd:double" => new DoubleParser(context, multiplicationFactor = factor)
-          case "xsd:float" => new DoubleParser(context, multiplicationFactor = factor)
-          case "xsd:string" => // strings with no language tags
-          {
-            checkMultiplicationFactor("xsd:string")
-            StringParser
-          }
-          case "rdf:langString" => // strings with language tags
-          {
-            checkMultiplicationFactor("rdf:langString")
-            StringParser
-          }
-          case "xsd:anyURI" => {
-            checkMultiplicationFactor("xsd:anyURI")
-            new LinkParser(false)
-          }
-          case "xsd:date" => {
-            checkMultiplicationFactor("xsd:date")
-            new DateTimeParser(context, dt)
-          }
-          case "xsd:gYear" => {
-            checkMultiplicationFactor("xsd:gYear")
-            new DateTimeParser(context, dt)
-          }
-          case "xsd:gYearMonth" => {
-            checkMultiplicationFactor("xsd:gYearMonth")
-            new DateTimeParser(context, dt)
-          }
-          case "xsd:gMonthDay" => {
-            checkMultiplicationFactor("xsd:gMonthDay")
-            new DateTimeParser(context, dt)
-          }
-          case "xsd:boolean" => {
-            checkMultiplicationFactor("xsd:boolean")
-            BooleanParser
-          }
-          case name => null
+        case "rdf:langString" => // strings with language tags
+        {
+          checkMultiplicationFactor("rdf:langString")
+          StringParser
         }
-        case other => null
+        case "xsd:anyURI" => {
+          checkMultiplicationFactor("xsd:anyURI")
+          new LinkParser(false)
+        }
+        case "xsd:date" => {
+          checkMultiplicationFactor("xsd:date")
+          new DateTimeParser(context, dt)
+        }
+        case "xsd:gYear" => {
+          checkMultiplicationFactor("xsd:gYear")
+          new DateTimeParser(context, dt)
+        }
+        case "xsd:gYearMonth" => {
+          checkMultiplicationFactor("xsd:gYearMonth")
+          new DateTimeParser(context, dt)
+        }
+        case "xsd:gMonthDay" => {
+          checkMultiplicationFactor("xsd:gMonthDay")
+          new DateTimeParser(context, dt)
+        }
+        case "xsd:boolean" => {
+          checkMultiplicationFactor("xsd:boolean")
+          BooleanParser
+        }
+        case name => null
       }
-    } else {
-        null
+      case other => null
     }
+  } else {
+    null
+  }
 
 
 
