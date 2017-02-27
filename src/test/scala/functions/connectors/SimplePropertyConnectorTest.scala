@@ -1,16 +1,15 @@
-package functions
+package functions.connectors
 
 import org.scalatest.{FlatSpec, Matchers}
 
-
 /**
-  * Tests for the SimplePropertyFunction
+  * Created by wmaroy on 23.02.17.
   */
-class SimplePropertyFunctionTest extends FlatSpec with Matchers {
+class SimplePropertyConnectorTest extends FlatSpec with Matchers {
 
   "A date" should "be parsed correctly" in {
 
-    val property = "{{Birth date and age|1955|10|28}}"
+    val property = "birth_date={{Birth date and age|1955|10|28}}"
     val select = null
     val prefix = null
     val suffix = null
@@ -19,8 +18,8 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val ontologyProperty = "birthDate"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, ontologyProperty, unit)
-    val result = fn.execute()
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, ontologyProperty, unit)
+    val result = cn.execute()
 
     result.head should be ("1955-10-28")
 
@@ -37,8 +36,8 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val datatype =  "spouse"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
-    val result = fn.execute()
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = cn.execute()
 
     result.head should be ("http://en.dbpedia.org/resource/Melinda_Gates")
 
@@ -55,8 +54,8 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val datatype =  "networth"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
-    val result = fn.execute()
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = cn.execute()
 
     result.head should be ("8.52E10")
 
@@ -73,8 +72,8 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val datatype =  "Currency"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
-    val result = fn.execute()
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = cn.execute()
 
     result.length should be (0)
   }
@@ -90,13 +89,11 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val datatype =  "birthName"
     val unit = null
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
-    val result = fn.execute()
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = cn.execute()
 
     result.head should be ("William Henry Gates III")
 
   }
-
-
 
 }

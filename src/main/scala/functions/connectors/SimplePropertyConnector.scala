@@ -17,24 +17,7 @@ class SimplePropertyConnector(
    val datatype : String,
    val unit : String) extends FunctionConnector {
 
-
-    override def execute(): Seq[String] = {
-
-      val uri = createUri()
-
-      val result = scala.io.Source.fromURL(uri).mkString
-
-      val parsedJson : JsValue = Json.parse(result)
-
-      val list = parsedJson.asInstanceOf[JsArray].value
-
-      val seq = list.map(_.toString().replaceAll("\"",""))
-
-      seq
-
-    }
-
-    private def createUri(): String = {
+    protected def createUri(): String = {
 
       val firstPart = FunctionConnectionConfig.hostAddress + "/functions/simpleProperty?"
 

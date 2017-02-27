@@ -1,4 +1,5 @@
 import functions.*;
+import functions.connectors.LatConnector;
 import functions.connectors.SimplePropertyConnector;
 
 import javax.sql.rowset.serial.SerialRef;
@@ -31,10 +32,8 @@ public class DBpediaFunctions {
             dFactor = Double.parseDouble(factor);
         }
         try {
-            //SimplePropertyConnector cn = new SimplePropertyConnector(property, select, prefix, suffix, transform, dFactor,dataType,unit);
-            //SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor,dataType,unit);
-            //return new ArrayList<String>(Arrays.asList(fn.execute()));
-            //return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
+            SimplePropertyConnector cn = new SimplePropertyConnector(property, select, prefix, suffix, transform, dFactor,dataType,unit);
+            return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
         } catch(Exception e) {
             System.err.println("\nSimplePropertyFunction exception: " + e);
             e.printStackTrace();
@@ -55,9 +54,8 @@ public class DBpediaFunctions {
      */
     public static ArrayList<String> latFunction(String coordinate, String latitude, String degrees, String minutes, String seconds, String direction) {
         try {
-            //LatFunction fn = new LatFunction(coordinate, latitude, degrees, minutes, seconds, direction);
-            //return new ArrayList<String>(Arrays.asList(fn.execute()));
-            return new ArrayList<String>();
+            LatConnector cn = new LatConnector(coordinate, latitude, degrees, minutes, seconds, direction);
+            return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
         } catch(Exception e) {
             System.err.println("LatFunction exception: " + e);
         }
@@ -75,9 +73,8 @@ public class DBpediaFunctions {
      */
     public static ArrayList<String> lonFunction(String coordinate, String longitude, String degrees, String minutes, String seconds, String direction) {
         try {
-            //LonFunction fn = new LonFunction(coordinate, longitude, degrees, minutes, seconds, direction);
-            //return new ArrayList<String>(Arrays.asList(fn.execute()));
-            return new ArrayList<String>();
+            LatConnector cn = new LatConnector(coordinate, longitude, degrees, minutes, seconds, direction);
+            return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
         } catch(Exception e) {
             System.err.println("LonFunction exception: " + e);
         }
@@ -92,8 +89,7 @@ public class DBpediaFunctions {
      */
     public static Boolean equals(String property, String value) {
         try {
-            EqualsFunction fn = new EqualsFunction(property, value);
-            return fn.execute();
+            return false;
         } catch(Exception e) {
             System.err.println("Equals exception: " + e);
         }
@@ -107,8 +103,7 @@ public class DBpediaFunctions {
      */
     public static Boolean isSet(String property) {
         try {
-            IsSetFunction fn = new IsSetFunction(property);
-            return fn.execute();
+            return false;
         } catch(Exception e) {
             System.err.println("IsSet exception: " + e);
         }
@@ -123,8 +118,7 @@ public class DBpediaFunctions {
      */
     public static Boolean contains(String property, String value) {
         try {
-            ContainsFunction fn = new ContainsFunction(property, value);
-            return fn.execute();
+            return false;
         } catch(Exception e) {
             System.err.println("Contains exception: " + e);
         }
@@ -139,8 +133,7 @@ public class DBpediaFunctions {
      */
     public static String startDateFunction(String property, String ontologyProperty) {
         try {
-            StartDateFunction fn = new StartDateFunction(property, ontologyProperty);
-            return fn.execute();
+            return null;
         } catch(Exception e) {
             System.err.println("Start Data function exception: " + e);
         }
@@ -155,7 +148,7 @@ public class DBpediaFunctions {
      */
     public static String endDateFunction(String property, String ontologyProperty) {
         try {
-
+            return null;
         } catch(Exception e) {
             System.err.println("Contains exception: " + e);
         }

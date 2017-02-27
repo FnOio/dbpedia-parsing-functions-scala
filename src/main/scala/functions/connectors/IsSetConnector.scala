@@ -5,9 +5,9 @@ package functions.connectors
   */
 class IsSetConnector extends FunctionConnector {
   /**
-    * Makes a connection with the configured external server and executes a function. This returns a JSON string.
+    * Creates the uri for making the function execute request
     *
     * @return
     */
-  override def execute(): Seq[String] = ???
+  override protected def createUri(): String = ???
 }
