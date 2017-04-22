@@ -1,9 +1,10 @@
 package functions.connectors
 
 /**
-  * Created by wmaroy on 23.02.17.
+  * Created by wmaroy on 22.04.17.
   */
-class ContainsConnector(val property: String, val value : String) extends FunctionConnector {
+class ExtractDateConnector(val property : String, val dataDatatype : String) extends FunctionConnector{
+
   /**
     * Creates the uri for making the function execute request
     *
@@ -11,14 +12,15 @@ class ContainsConnector(val property: String, val value : String) extends Functi
     */
   override protected def createUri(): String = {
 
-    val firstPart = FunctionConnectionConfig.hostAddress + "/functions/containsFunction?"
+    val firstPart = FunctionConnectionConfig.hostAddress + "/functions/extract-date?"
 
     val propertyAdded = addParam("property=" + encode(property), "")
-    val valueAdded = addParam("value=" + encode(value), propertyAdded)
+    val valueAdded = addParam("datedatatype=" + encode(dataDatatype), propertyAdded)
 
     val secondPart = valueAdded
     val uri = firstPart + secondPart
 
     uri
   }
+
 }

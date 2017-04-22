@@ -25,6 +25,26 @@ class SimplePropertyConnectorTest extends FlatSpec with Matchers {
 
   }
 
+
+
+  "An areacode" should "be parsed correctly" in {
+
+    val property = "area_code = 0241 / 02405 / 02407 / 02408"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "areaCode"
+    val unit = null
+
+    val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val result = cn.execute()
+
+    result.head should be ("0241 / 02405 / 02407 / 02408")
+
+  }
+
   "A person" should "be parsed correctly" in {
 
     val property = "spouse=<br />[[Melinda Gates|Melinda Gates]]<br />January 1, 1994<br />"

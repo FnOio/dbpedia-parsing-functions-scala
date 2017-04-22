@@ -1,9 +1,10 @@
 package functions.connectors
 
 /**
-  * Created by wmaroy on 23.02.17.
+  * Created by wmaroy on 22.04.17.
   */
-class IsSetConnector(val property : String) extends FunctionConnector {
+class ExtractEntityConnector(val property : String) extends FunctionConnector {
+
   /**
     * Creates the uri for making the function execute request
     *
@@ -11,12 +12,14 @@ class IsSetConnector(val property : String) extends FunctionConnector {
     */
   override protected def createUri(): String = {
 
-    val firstPart = FunctionConnectionConfig.hostAddress + "/functions/isSetFunction?"
+    val firstPart = FunctionConnectionConfig.hostAddress + "/functions/extract-entity?"
 
     val propertyAdded = addParam("property=" + encode(property), "")
-    val secondPart = propertyAdded
 
+    val secondPart = propertyAdded
     val uri = firstPart + secondPart
+
     uri
   }
+
 }
