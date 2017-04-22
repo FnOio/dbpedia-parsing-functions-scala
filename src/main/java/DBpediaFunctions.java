@@ -189,6 +189,20 @@ public class DBpediaFunctions {
         return null;
     }
 
+    /**
+     * Executes extract String function
+     * @param property
+     * @return
+     */
+    public static String extractString(String property) {
+        try {
+            ExtractStringConnector cn = new ExtractStringConnector(property);
+            return cn.execute().head();
+        } catch(Exception e) {
+        }
+        return null;
+    }
+
 
 
 }
