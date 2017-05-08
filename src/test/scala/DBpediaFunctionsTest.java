@@ -1,4 +1,6 @@
-import static org.junit.Assert.*;
+import dbpedia.dataparsers.ontology.Ontology;
+import dbpedia.dataparsers.ontology.OntologySingleton;
+import functions.DBpediaFunctions;
 
 /**
  * Created by wmaroy on 28.02.17.
@@ -6,12 +8,26 @@ import static org.junit.Assert.*;
 public class DBpediaFunctionsTest {
 
     @org.junit.Test
-    public void startDateFunction() throws Exception {
+    public void simplePropertyFunctionTest() throws Exception {
 
-        String property = "years_active=427 BC – 386 BC";
-        String ontologyPropertyString = "activeYearsStartYear";
+        String property = "birth_date={{Birth date and age|1955|10|28}}";
+        String select = null;
+        String prefix = null;
+        String suffix = null;
+        String transform = null;
+        Double factor = 1.0;
+        String ontologyProperty = "birthDate";
+        String unit = null;
 
-        DBpediaFunctions.startDateFunction(property, ontologyPropertyString);
+        // check if ontology is loaded only once
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
+        System.out.println(OntologySingleton.getOntology().datatypes().size());
+        System.out.println(OntologySingleton.getOntology().properties().size());
+        System.out.println(OntologySingleton.getOntology().classes().size());
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
+
+
 
     }
 

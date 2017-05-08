@@ -15,12 +15,16 @@ trait FunctionConnector {
     * @return
     */
   def execute() : Seq[String] = {
+    val start = System.currentTimeMillis()
     val uri = createUri()
     val result = scala.io.Source.fromURL(uri).mkString
+
     val parsedJson : JsValue = Json.parse(result)
+    val end = System.currentTimeMillis() - start
     val list = parsedJson.asInstanceOf[JsArray].value
     val seq = list.map(_.toString().replaceAll("\"",""))
     val seqWithoutNull = seq.filterNot(_.equals("null"))
+    println("Functions with HTTP is slow: " + end + " ms")
     seqWithoutNull
   }
 

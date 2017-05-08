@@ -9,8 +9,9 @@ class ExtractStringConnectorTest extends FlatSpec with Matchers {
 
   "A correct query" should "be executed correctly" in {
 
-    val connector = new ExtractStringConnector("[[Melinda Gates|Melinda Gates]]")
+    val connector = new ExtractStringConnector("Alexander Graham Bell")
     val response = connector.execute()
+    println(response)
 
   }
 
@@ -33,6 +34,18 @@ class ExtractStringConnectorTest extends FlatSpec with Matchers {
     response.size should be (0)
     response should not be null
 
+  }
+
+  "An enumeration of strings " should "be executed correctly" in {
+
+    val property = "{{Ubl|[[Technical advisor|Technology Advisor]] of [[Microsoft|Microsoft]] |[[Chairman|Co-Chairman]] of the [[Bill & Melinda Gates Foundation|Bill & Melinda Gates Foundation]] |[[CEO|CEO]] of [[Cascade Investment|Cascade Investment]] |[[Chairman|Chairman]] of [[Branded Entertainment Network|Branded Entertainment Network]] |[[Chairman|Chairman]] of the [[TerraPower|TerraPower]] }}"
+
+    val connector = new ExtractStringConnector(property)
+    val response = connector.execute()
+
+    response.size should not be 0
+    response should not be null
+    response.head should not be "null"
   }
 
 }

@@ -23,6 +23,8 @@ class ExtractEntityConnectorTest extends FlatSpec with Matchers {
     response should not be null
     response.head should not be "null"
 
+
+
   }
 
   "An empty query " should "return an empty ListBuffer" in {
@@ -33,6 +35,29 @@ class ExtractEntityConnectorTest extends FlatSpec with Matchers {
     response.size should be (0)
     response should not be null
 
+  }
+
+  "A place " should "be executed correctly" in {
+
+    val connector = new ExtractEntityConnector("[[Seattle, Washington|Seattle, Washington]], U.S")
+    val response = connector.execute()
+
+    response.size should not be 0
+    response should not be null
+    response.head should not be "null"
+
+  }
+
+  "An enumartion of entities " should "be executed correctly" in {
+
+    val property = "{{Ubl|[[Technical advisor|Technology Advisor]] of [[Microsoft|Microsoft]] |[[Chairman|Co-Chairman]] of the [[Bill & Melinda Gates Foundation|Bill & Melinda Gates Foundation]] |[[CEO|CEO]] of [[Cascade Investment|Cascade Investment]] |[[Chairman|Chairman]] of [[Branded Entertainment Network|Branded Entertainment Network]] |[[Chairman|Chairman]] of the [[TerraPower|TerraPower]] }}"
+
+    val connector = new ExtractEntityConnector(property)
+    val response = connector.execute()
+
+    response.size should not be 0
+    response should not be null
+    response.head should not be "null"
   }
 
 }

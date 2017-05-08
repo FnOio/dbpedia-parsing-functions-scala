@@ -7,6 +7,23 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class SimplePropertyConnectorTest extends FlatSpec with Matchers {
 
+
+  "A connector" should "survive a stress test" in {
+    val property = "birth_date={{Birth date and age|1955|10|28}}"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val ontologyProperty = "birthDate"
+    val unit = null
+
+    for(i <- 1 to 50) {
+      val cn = new SimplePropertyConnector(property, select, prefix, suffix, transform, factor, ontologyProperty, unit)
+      val result = cn.execute()
+    }
+  }
+
   "A date" should "be parsed correctly" in {
 
     val property = "birth_date={{Birth date and age|1955|10|28}}"
@@ -20,6 +37,7 @@ class SimplePropertyConnectorTest extends FlatSpec with Matchers {
 
     val cn = new SimplePropertyConnector(property, select, prefix, suffix,transform , factor, ontologyProperty, unit)
     val result = cn.execute()
+
 
     result.head should be ("1955-10-28")
 
