@@ -1,13 +1,13 @@
 package util.text.dbpedia.extraction.sources;
 
+import dbpedia.dataparsers.util.Language;
+import dbpedia.dataparsers.util.wikiparser.Namespace;
+import dbpedia.dataparsers.util.wikiparser.WikiPage;
+import dbpedia.dataparsers.util.wikiparser.WikiTitle;
+import scala.Function1;
+import scala.util.control.ControlThrowable;
 import util.Exceptions;
 import util.text.xml.XMLStreamUtils;
-import scala.Function1;
-import dataparsers.util.Language;
-import dataparsers.util.wikiparser.Namespace;
-import dataparsers.util.wikiparser.WikiPage;
-import dataparsers.util.wikiparser.WikiTitle;
-import scala.util.control.ControlThrowable;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -383,7 +383,7 @@ public class WikipediaDumpParser
    * @return null if title cannot be parsed for some reason
    * @throws XMLStreamException
    */
-  private WikiTitle parseTitle( String titleString )
+  private WikiTitle parseTitle(String titleString )
   {
     try
     {

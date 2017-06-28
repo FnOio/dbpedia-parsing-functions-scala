@@ -57,7 +57,7 @@ public class HtmlCoder
    * @param keepEncoded defines if ampersand, brackets and quotes that are already encoded should 
    * be kept in encoded form or should be decoded. Must not be {@code null}
    */
-  public HtmlCoder( XmlCodes encodePlain, XmlCodes keepEncoded )
+  public HtmlCoder(XmlCodes encodePlain, XmlCodes keepEncoded )
   {
     if (encodePlain == null) throw new NullPointerException("characters to change from plain to encoded form");
     if (keepEncoded == null) throw new NullPointerException("characters to keep in encoded form");
@@ -66,7 +66,7 @@ public class HtmlCoder
   }
   
   /**
-   * Set the {@link ParseExceptionHandler error handler}. Before this method is called, 
+   * Set the {@link ParseExceptionHandler error handler}. Before this method is called,
    * a {@link ParseExceptionThrower} is used.
    * @param handler the {@link ParseExceptionHandler error handler}, must not be {@code null}
    */

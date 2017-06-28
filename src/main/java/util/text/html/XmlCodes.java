@@ -39,7 +39,7 @@ public enum XmlCodes
    * @param quo should quotes ({@code "}) and apostrophes ({@code '}) be encoded?
    * @return the {@link XmlCodes} for the given choice, never {@code null}
    */
-  public static XmlCodes choose( boolean amp, boolean bra, boolean quo )
+  public static XmlCodes choose(boolean amp, boolean bra, boolean quo )
   {
     return amp ? bra ? quo ? AMP_BRA_QUO : AMP_BRA : quo ? AMP_QUO : AMP : bra ? quo ? BRA_QUO : BRA : quo ? QUO : NONE;
   }
