@@ -2,13 +2,14 @@ package functions;
 
 import dbpedia.dataparsers.ontology.OntologySingleton;
 import functions.*;
-import functions.connectors.*;
 import functions.implementations.SimplePropertyFunction;
 import functions.implementations.conditions.ContainsFunction;
 import functions.implementations.conditions.EqualsFunction;
+import functions.implementations.conditions.IsSetFunction;
 import functions.implementations.core.ExtractDateFunction;
 import functions.implementations.core.ExtractEntityFunction;
 import functions.implementations.core.ExtractStringFunction;
+import functions.implementations.date.EndDateFunction;
 import functions.implementations.date.StartDateFunction;
 import functions.implementations.geocoordinate.LatFunction;
 import functions.implementations.geocoordinate.LonFunction;
@@ -47,8 +48,6 @@ public class DBpediaFunctions {
         }
         try {
             loadOntologyMaybe();
-            //SimplePropertyConnector cn = new SimplePropertyConnector(property, select, prefix, suffix, transform, dFactor,dataType,unit);
-            //ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
             SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor, dataType, unit);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute()));
             return list ;
@@ -70,9 +69,6 @@ public class DBpediaFunctions {
      */
     public static ArrayList<String> latFunction(String coordinate, String latitude, String degrees, String minutes, String seconds, String direction) {
         try {
-            //LatConnector cn = new LatConnector(coordinate, latitude, degrees, minutes, seconds, direction);
-            //ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
-            //return list;
             loadOntologyMaybe();
             LatFunction fn = new LatFunction(coordinate, latitude, degrees, minutes, seconds, direction);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute()));
@@ -93,11 +89,6 @@ public class DBpediaFunctions {
      */
     public static ArrayList<String> lonFunction(String coordinate, String longitude, String degrees, String minutes, String seconds, String direction) {
         try {
-            /*
-            LatConnector cn = new LatConnector(coordinate, longitude, degrees, minutes, seconds, direction);
-            ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
-            return list;
-            */
             loadOntologyMaybe();
             LonFunction cn = new LonFunction(coordinate, longitude, degrees, minutes, seconds, direction);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
@@ -115,8 +106,6 @@ public class DBpediaFunctions {
      */
     public static Boolean equals(String property, String value) {
         try {
-            //EqualsConnector cn = new EqualsConnector(property, value);
-            //return Boolean.valueOf(cn.execute().head());
             loadOntologyMaybe();
             EqualsFunction fn = new EqualsFunction(property, value);
             return fn.execute();
@@ -132,11 +121,9 @@ public class DBpediaFunctions {
      */
     public static Boolean isSet(String property) {
         try {
-            //IsSetConnector cn = new IsSetConnector(property);
-            //return Boolean.valueOf(cn.execute().head());
             loadOntologyMaybe();
-            IsSetConnector fn = new IsSetConnector(property);
-            return Boolean.valueOf(fn.execute().head());
+            IsSetFunction fn = new IsSetFunction(property);
+            return fn.execute();
         } catch(Exception e) {
         }
         return false;
@@ -150,9 +137,6 @@ public class DBpediaFunctions {
      */
     public static Boolean contains(String property, String value) {
         try {
-            //ContainsConnector cn = new ContainsConnector(property, value);
-            //Seq<String> result = cn.execute();
-            //return Boolean.valueOf(result.head());
             loadOntologyMaybe();
             ContainsFunction fn = new ContainsFunction(property, value);
             return fn.execute();
@@ -188,12 +172,9 @@ public class DBpediaFunctions {
      */
     public static String endDateFunction(String property, String ontologyProperty) {
         try {
-            //EndDateConnector cn = new EndDateConnector(property, ontologyProperty);
-            //String result = cn.execute().head();
-            //return result;
             loadOntologyMaybe();
-            EndDateConnector cn = new EndDateConnector(property, ontologyProperty);
-            return cn.execute().head();
+            EndDateFunction cn = new EndDateFunction(property, ontologyProperty);
+            return cn.execute();
         } catch(Exception e) {
         }
         return null;
@@ -207,8 +188,6 @@ public class DBpediaFunctions {
      */
     public static String extractDate(String property, String dateDatatype) {
         try {
-            //ExtractDateConnector cn = new ExtractDateConnector(property, dateDatatype);
-            //return cn.execute().head();
             loadOntologyMaybe();
             ExtractDateFunction fn = new ExtractDateFunction();
             return fn.execute(property, dateDatatype).head();
@@ -224,8 +203,6 @@ public class DBpediaFunctions {
      */
     public static ArrayList<String> extractEntity(String property) {
         try {
-            //ExtractEntityConnector cn = new ExtractEntityConnector(property);
-            //return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
             loadOntologyMaybe();
             ExtractEntityFunction fn = new ExtractEntityFunction();
             return new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute(property)));
@@ -241,8 +218,6 @@ public class DBpediaFunctions {
      */
     public static String extractString(String property) {
         try {
-            //ExtractStringConnector cn = new ExtractStringConnector(property);
-            //return cn.execute().head();
             loadOntologyMaybe();
             ExtractStringFunction fn = new ExtractStringFunction();
             return fn.execute(property).head();
