@@ -31,4 +31,14 @@ public class DBpediaFunctionsTest {
 
     }
 
+    @org.junit.Test
+    public void getLocalNameTest() throws Exception {
+
+        String uri = "http://dbpedia.org/ontology/name";
+        String localName = DBpediaFunctions.getLocalName(uri);
+
+        assert localName.equals("name");
+
+    }
+
 }

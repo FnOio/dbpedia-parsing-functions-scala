@@ -13,9 +13,12 @@ import functions.implementations.date.EndDateFunction;
 import functions.implementations.date.StartDateFunction;
 import functions.implementations.geocoordinate.LatFunction;
 import functions.implementations.geocoordinate.LonFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.collection.Seq;
 
 import javax.sql.rowset.serial.SerialRef;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,7 +28,7 @@ import java.util.Arrays;
  */
 public class DBpediaFunctions {
 
-
+    private static Logger logger = LoggerFactory.getLogger(DBpediaFunctions.class);
 
     /**
      * Executes SimpleProperty Function
@@ -48,10 +51,11 @@ public class DBpediaFunctions {
         }
         try {
             loadOntologyMaybe();
-            SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor, dataType, unit);
+            SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor, getLocalName(dataType), getLocalName(unit));
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute()));
             return list ;
         } catch(Exception e) {
+
         }
 
         return null;
@@ -157,7 +161,7 @@ public class DBpediaFunctions {
             //String result = cn.execute().head();
             //return result;
             loadOntologyMaybe();
-            StartDateFunction fn = new StartDateFunction(property, ontologyProperty);
+            StartDateFunction fn = new StartDateFunction(property, getLocalName(ontologyProperty));
             return fn.execute();
         } catch(Exception e) {
         }
@@ -173,7 +177,7 @@ public class DBpediaFunctions {
     public static String endDateFunction(String property, String ontologyProperty) {
         try {
             loadOntologyMaybe();
-            EndDateFunction cn = new EndDateFunction(property, ontologyProperty);
+            EndDateFunction cn = new EndDateFunction(property, getLocalName(ontologyProperty));
             return cn.execute();
         } catch(Exception e) {
         }
@@ -235,6 +239,11 @@ public class DBpediaFunctions {
 
     private static Boolean ontologyLoaded() {
         return OntologySingleton.getOntology() != null;
+    }
+
+    public static String getLocalName(String uri) {
+        int lastDashIndex = uri.lastIndexOf("/");
+        return uri.substring(lastDashIndex + 1, uri.length());
     }
 
 
