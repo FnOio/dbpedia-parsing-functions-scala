@@ -42,7 +42,7 @@ public class DBpediaFunctions {
      * @param dataType
      * @return
      */
-    public static ArrayList<String> simplePropertyFunction(String property, String factor, String transform, String select, String prefix, String suffix, String unit, String dataType) {
+    public static ArrayList<String> simplePropertyFunction(String property, String factor, String transform, String select, String prefix, String suffix, String unit, String dataType, String language) {
         Double dFactor;
         if(factor == null) {
             dFactor = 1.0;
@@ -51,7 +51,15 @@ public class DBpediaFunctions {
         }
         try {
             loadOntologyMaybe();
-            SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor, getLocalName(dataType), getLocalName(unit));
+            String localDatatype = dataType;
+            if(localDatatype != null) {
+                localDatatype = getLocalName(dataType);
+            }
+            String localUnit = unit;
+            if(localUnit != null) {
+                localUnit = getLocalName(unit);
+            }
+            SimplePropertyFunction fn = new SimplePropertyFunction(property, select, prefix, suffix, transform, dFactor, localDatatype, localUnit, language);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute()));
             return list ;
         } catch(Exception e) {
@@ -71,10 +79,10 @@ public class DBpediaFunctions {
      * @param direction
      * @return
      */
-    public static ArrayList<String> latFunction(String coordinate, String latitude, String degrees, String minutes, String seconds, String direction) {
+    public static ArrayList<String> latFunction(String coordinate, String latitude, String degrees, String minutes, String seconds, String direction, String language) {
         try {
             loadOntologyMaybe();
-            LatFunction fn = new LatFunction(coordinate, latitude, degrees, minutes, seconds, direction);
+            LatFunction fn = new LatFunction(coordinate, latitude, degrees, minutes, seconds, direction, language);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(fn.execute()));
             return list;
         } catch(Exception e) {
@@ -91,10 +99,10 @@ public class DBpediaFunctions {
      * @param direction
      * @return
      */
-    public static ArrayList<String> lonFunction(String coordinate, String longitude, String degrees, String minutes, String seconds, String direction) {
+    public static ArrayList<String> lonFunction(String coordinate, String longitude, String degrees, String minutes, String seconds, String direction, String language) {
         try {
             loadOntologyMaybe();
-            LonFunction cn = new LonFunction(coordinate, longitude, degrees, minutes, seconds, direction);
+            LonFunction cn = new LonFunction(coordinate, longitude, degrees, minutes, seconds, direction, language);
             ArrayList<String> list = new ArrayList<String>(scala.collection.JavaConversions.seqAsJavaList(cn.execute()));
             return list;
         } catch(Exception e) {
@@ -155,13 +163,17 @@ public class DBpediaFunctions {
      * @param ontologyProperty
      * @return
      */
-    public static String startDateFunction(String property, String ontologyProperty) {
+    public static String startDateFunction(String property, String ontologyProperty, String language) {
         try {
             //StartDateConnector cn = new StartDateConnector(property, ontologyProperty);
             //String result = cn.execute().head();
             //return result;
             loadOntologyMaybe();
-            StartDateFunction fn = new StartDateFunction(property, getLocalName(ontologyProperty));
+            String localOntologyProperty = ontologyProperty;
+            if(localOntologyProperty != null) {
+                localOntologyProperty = getLocalName(ontologyProperty);
+            }
+            StartDateFunction fn = new StartDateFunction(property, localOntologyProperty, language);
             return fn.execute();
         } catch(Exception e) {
         }
@@ -174,10 +186,14 @@ public class DBpediaFunctions {
      * @param ontologyProperty
      * @return
      */
-    public static String endDateFunction(String property, String ontologyProperty) {
+    public static String endDateFunction(String property, String ontologyProperty, String language) {
         try {
             loadOntologyMaybe();
-            EndDateFunction cn = new EndDateFunction(property, getLocalName(ontologyProperty));
+            String localOntologyProperty = ontologyProperty;
+            if(localOntologyProperty != null) {
+                localOntologyProperty = getLocalName(ontologyProperty);
+            }
+            EndDateFunction cn = new EndDateFunction(property, localOntologyProperty, language);
             return cn.execute();
         } catch(Exception e) {
         }

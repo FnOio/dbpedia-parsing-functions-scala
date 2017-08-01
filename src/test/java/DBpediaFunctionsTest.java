@@ -18,14 +18,15 @@ public class DBpediaFunctionsTest {
         Double factor = 1.0;
         String ontologyProperty = "birthDate";
         String unit = null;
+        String language = "en";
 
         // check if ontology is loaded only once
-        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty, language));
         System.out.println(OntologySingleton.getOntology().datatypes().size());
         System.out.println(OntologySingleton.getOntology().properties().size());
         System.out.println(OntologySingleton.getOntology().classes().size());
-        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
-        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty));
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty, language));
+        System.out.println(DBpediaFunctions.simplePropertyFunction(property, factor.toString(), transform, select, prefix, suffix, unit, ontologyProperty, language));
 
 
 

@@ -21,8 +21,9 @@ class LatFunctionTest extends FlatSpec with Matchers {
     val minutes = "latm=51"
     val seconds = "lats=54"
     val direction = null
+    val language = "en"
 
-    val fn = new LatFunction(null, latitude, degrees, minutes, seconds, direction)
+    val fn = new LatFunction(null, latitude, degrees, minutes, seconds, direction, language)
     val result = fn.execute()
 
     result.head should be ("33.865")
@@ -37,8 +38,9 @@ class LatFunctionTest extends FlatSpec with Matchers {
     val minutes = "latm=51"
     val seconds = "lats=54"
     val direction = null
+    val language = "en"
 
-    val fn = new LatFunction(null, latitude, degrees, minutes, seconds, direction)
+    val fn = new LatFunction(null, latitude, degrees, minutes, seconds, direction, language)
     val result = fn.execute()
 
     result.head should be (null)

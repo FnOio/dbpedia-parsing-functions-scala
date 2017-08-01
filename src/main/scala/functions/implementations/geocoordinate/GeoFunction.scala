@@ -1,6 +1,7 @@
 package functions.implementations.geocoordinate
 
 import dbpedia.dataparsers._
+import dbpedia.dataparsers.util.Language
 import dbpedia.dataparsers.util.wikiparser.PropertyNode
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
 import functions.Function
@@ -14,9 +15,10 @@ abstract class GeoFunction(
   val degrees: String,
   val minutes: String,
   val seconds: String,
-  val direction: String) extends Function {
+  val direction: String,
+  val language: String) extends Function {
 
-  private val context = ContextLoader.loadContext()
+  private val context = ContextLoader.loadContext(Language(language))
   private val wikiparser = new SimpleWikiParser
   private val doubleParser = new DoubleParser(context)
   private val singleGeoCoordinateParser = new SingleGeoCoordinateParser(context)

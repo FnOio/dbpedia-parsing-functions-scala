@@ -3,9 +3,11 @@ package functions.implementations
 import dbpedia.dataparsers._
 import dbpedia.dataparsers.ontology.datatypes._
 import dbpedia.dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes, OntologySingleton}
+import dbpedia.dataparsers.util.wikiparser.Namespace
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
 import dbpedia.dataparsers.util.{Language, Redirects}
 import functions.Function
+
 
 import scala.collection.mutable.ListBuffer
 import scala.language.reflectiveCalls
@@ -19,7 +21,8 @@ class SimplePropertyFunction(
   val transform : String, // rml mappings require this to be public (e.g. ModelMapper)
   val factor : Double,  // rml mappings require this to be public (e.g. ModelMapper)
   val datatype : String,
-  val unit :  String) extends Function {
+  val unit :  String,
+  val language : String) extends Function {
 
 
   private val ontologyObject = OntologySingleton.getOntology
@@ -40,13 +43,13 @@ class SimplePropertyFunction(
     case _ : Exception => null
   }
 
-    private val language = Language.English
+    private val languageObject = Language("nl")
     private val wikiparser = new SimpleWikiParser
 
     val context = new {
-      val language : Language = Language.English
+      val language : Language = languageObject
       val redirects : Redirects = new Redirects(Map())
-      val ontology : Ontology = new Ontology(null,null,datatypes,null,null,null)
+      val ontology : Ontology = new Ontology(null, null, datatypes, null, null, null)
     }
 
     val selector: List[_] => List[_] =
@@ -83,7 +86,7 @@ class SimplePropertyFunction(
         p + value.trim + s
     }
 
-    private val languageResourceNamespace = language.resourceUri.namespace
+    private val languageResourceNamespace = languageObject.resourceUri.namespace
 
     private val parser : DataParser = if(ontologyProperty != null) {
     ontologyProperty.range match {
@@ -184,7 +187,7 @@ class SimplePropertyFunction(
     }
 
     def execute(): Seq[String] = {
-      val node = wikiparser.parseProperty(templateProperty)
+      val node = wikiparser.parseProperty(templateProperty, languageObject)
       var result = new ListBuffer[String]
       if(parser != null) {
         val parseResults = parser.parsePropertyNode(node, true, transform, valueTransformer)

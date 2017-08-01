@@ -22,8 +22,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val ontologyProperty = "birthDate"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, ontologyProperty, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, ontologyProperty, unit, language)
     val result = fn.execute()
 
     result.head should be ("1955-10-28")
@@ -40,8 +41,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "spouse"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.head should be ("http://en.dbpedia.org/resource/Melinda_Gates")
@@ -58,8 +60,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "networth"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.head should be ("8.52E10")
@@ -76,8 +79,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "Currency"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.length should be (0)
@@ -93,8 +97,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "birthName"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.head should be ("William Henry Gates III")
@@ -110,11 +115,30 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "programmingLanguage"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.head should be ("http://en.dbpedia.org/resource/Java_(programming_language)")
+
+  }
+
+  "Programming languages" should "be parsed correctly in another language" in {
+    val property = "prog_language=[[Java (programming language)|Java]], [[C (programming language)|C]], [[C++]], [[COBOL]], [[PL/I]], [[HLASM]], [[FORTRAN]], [[REXX]], and many others"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "programmingLanguage"
+    val unit = null
+    val language = "nl"
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
+    val result = fn.execute()
+
+    result.head should be ("http://nl.dbpedia.org/resource/Java_(programming_language)")
 
   }
 
@@ -127,8 +151,9 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
     val factor = 1.0
     val datatype =  "state"
     val unit = null
+    val language = "en"
 
-    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit)
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
     val result = fn.execute()
 
     result.length should be (0) // fix this!

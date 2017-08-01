@@ -563,8 +563,8 @@ class SimpleWikiParser extends WikiParser
         PropertyNode(key, nodes, line)
     }
 
-  def parseProperty(property : String) : PropertyNode = {
-    parseProperty(new Source(property, Language.English), "unknown", 0)
+  def parseProperty(property : String, language: Language = Language.English) : PropertyNode = {
+    parseProperty(new Source(property, language), "unknown", 0)
   }
 
     private def parseParserFunction(decodedName : String, source : Source, level : Int) : ParserFunctionNode =

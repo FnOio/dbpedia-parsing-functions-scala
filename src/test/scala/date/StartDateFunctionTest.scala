@@ -17,8 +17,9 @@ class StartDateFunctionTest extends FlatSpec with Matchers {
 
     val property = null
     val ontologyPropertyString = null
+    val language = "en"
 
-    an [NoSuchElementException] should be thrownBy new StartDateFunction(property, ontologyPropertyString)
+    an [NoSuchElementException] should be thrownBy new StartDateFunction(property, ontologyPropertyString, language)
 
   }
 
@@ -26,8 +27,9 @@ class StartDateFunctionTest extends FlatSpec with Matchers {
 
     val property = "1975-present"
     val ontologyPropertyString = "activeYearsStartYear"
+    val language = "en"
 
-    val fn = new StartDateFunction(property, ontologyPropertyString)
+    val fn = new StartDateFunction(property, ontologyPropertyString, language)
     fn.execute() should be ("1975")
   }
 
@@ -35,8 +37,9 @@ class StartDateFunctionTest extends FlatSpec with Matchers {
 
     val property = "3 months<br />{{small|(April 21, 1832 – July 10, 1832)}}"
     val ontologyPropertyString = "serviceStartYear"
+    val language = "en"
 
-    val fn = new StartDateFunction(property, ontologyPropertyString)
+    val fn = new StartDateFunction(property, ontologyPropertyString, language)
     fn.execute() should be ("0003")
 
   }
@@ -45,8 +48,9 @@ class StartDateFunctionTest extends FlatSpec with Matchers {
 
     val property = "years_active=427 BC – 386 BC"
     val ontologyPropertyString = "activeYearsStartYear"
+    val language = "en"
 
-    val fn = new StartDateFunction(property, ontologyPropertyString)
+    val fn = new StartDateFunction(property, ontologyPropertyString, language)
     println(fn.execute())
 
   }

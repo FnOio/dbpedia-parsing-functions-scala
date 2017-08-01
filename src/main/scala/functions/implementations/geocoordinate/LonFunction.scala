@@ -12,8 +12,9 @@ class LonFunction(
   override val degrees: String,
   override val minutes: String,
   override val seconds: String,
-  override val direction: String)
-  extends GeoFunction(coordinate, singleCoordinate, degrees, minutes, seconds, direction) {
+  override val direction: String,
+  override val language: String)
+  extends GeoFunction(coordinate, singleCoordinate, degrees, minutes, seconds, direction, language) {
 
   /**
     * Returns an array filled with a string that represents the latitude

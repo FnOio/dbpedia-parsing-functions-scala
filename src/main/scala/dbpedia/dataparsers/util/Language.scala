@@ -5,6 +5,8 @@ import java.util.Locale
 import scala.collection.mutable.HashMap
 import dbpedia.dataparsers.DBpediaNamespace
 
+import scala.io.{Codec, Source}
+
 /**
  * Represents a MediaWiki instance and the language used on it. Initially, this class was
  * only used for xx.wikipedia.org instances, but now we also use it for mappings..org
@@ -59,6 +61,8 @@ class Language private(
 object Language extends (String => Language)
 {
   implicit val wikiCodeOrdering = Ordering.by[Language, String](_.wikiCode)
+
+  val wikipediaLanguageUrl = "https://noc.wikimedia.org/conf/langlist"
   
   val map: Map[String, Language] = locally {
     
@@ -152,6 +156,49 @@ object Language extends (String => Language)
         "http://en.dbpedia.org",
         "http://en.dbpedia.org/api.php"
       )
+
+    val source = Source.fromURL(wikipediaLanguageUrl)(Codec.UTF8)
+    val wikiLanguageCodes = try source.getLines.toList finally source.close
+
+    val specialLangs: JsonConfig = new JsonConfig(this.getClass.getClassLoader.getResource("addonlangs.json"))
+
+    for (lang <- specialLangs.keys()) {
+      {
+        val properties = specialLangs.getMap(lang)
+        properties.get("dbpediaDomain") match{
+          case Some(dom) => languages(lang) = new Language(
+            properties.get("wikiCode").get.asText,
+            properties.get("name").get.asText,
+            properties.get("isoCode").get.asText,
+            properties.get("iso639_3").get.asText,
+            dom.asText,
+            properties.get("dbpediaUri").get.asText(),
+            new DBpediaNamespace(properties.get("resourceUri").get.asText),
+            new DBpediaNamespace(properties.get("propertyUri").get.asText),
+            properties.get("baseUri").get.asText,
+            properties.get("apiUri").get.asText
+          )
+          case None => languages(lang) = language(
+            properties.get("wikiCode").get.asText,
+            properties.get("name").get.asText,
+            properties.get("isoCode").get.asText,
+            properties.get("iso639_3").get.asText)
+        }
+      }
+    }
+
+    for (langEntry <- wikiLanguageCodes)
+    {
+      val loc = new Locale(langEntry)
+      try {
+        languages(langEntry) = language(langEntry, loc.getDisplayName, loc.getLanguage, loc.getISO3Language)
+      }
+      catch{
+        case mre : Exception =>
+          //if(!languages.keySet.contains(langEntry))
+            //logger.log(Level.WARNING, "Language not found: " + langEntry + ". To extract this language, please edit the addonLanguage.json in core.")
+      }
+    }
 
     languages.toMap // toMap makes immutable
   }

@@ -15,8 +15,9 @@ class EndDateFunctionTest extends FlatSpec with Matchers {
 
     val property = null
     val ontologyPropertyString = null
+    val language = "en"
 
-    an [NoSuchElementException] should be thrownBy new EndDateFunction(property, ontologyPropertyString)
+    an [NoSuchElementException] should be thrownBy new EndDateFunction(property, ontologyPropertyString, language)
 
   }
 
@@ -24,8 +25,9 @@ class EndDateFunctionTest extends FlatSpec with Matchers {
 
     val property = "1975-present"
     val ontologyPropertyString = "activeYearsEndYear"
+    val language = "en"
 
-    val fn = new EndDateFunction(property, ontologyPropertyString)
+    val fn = new EndDateFunction(property, ontologyPropertyString, language)
     fn.execute() should be (null)
 
   }
@@ -34,8 +36,9 @@ class EndDateFunctionTest extends FlatSpec with Matchers {
 
     val property = "1975-1992"
     val ontologyPropertyString = "activeYearsEndYear"
+    val language = "en"
 
-    val fn = new EndDateFunction(property, ontologyPropertyString)
+    val fn = new EndDateFunction(property, ontologyPropertyString, language)
     fn.execute() should be ("1992")
 
   }

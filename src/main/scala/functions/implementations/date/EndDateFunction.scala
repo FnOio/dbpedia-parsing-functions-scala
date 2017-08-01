@@ -3,6 +3,7 @@ package functions.implementations.date
 import dbpedia.config.mapping.DateIntervalMappingConfig._
 import dbpedia.dataparsers.ontology.OntologyProperty
 import dbpedia.dataparsers.ontology.datatypes.Datatype
+import dbpedia.dataparsers.util.Language
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
 import dbpedia.dataparsers.util.wikiparser.{NodeUtil, PropertyNode}
 import dbpedia.dataparsers.{ContextLoader, DataParserConfig, DateTimeParser, StringParser}
@@ -12,9 +13,9 @@ import functions.Function
 /**
   * Created by wmaroy on 08.02.17.
   */
-class EndDateFunction(property : String, ontologyPropertyString: String) extends Function {
+class EndDateFunction(property : String, ontologyPropertyString: String, language: String) extends Function {
 
-  private val context = ContextLoader.loadContext()
+  private val context = ContextLoader.loadContext(Language(language))
   private val ontologyProperty = context.ontology.properties(ontologyPropertyString)
   private val wikiparser = new SimpleWikiParser
   private val endDateParser = new DateTimeParser(context, rangeType(ontologyProperty))

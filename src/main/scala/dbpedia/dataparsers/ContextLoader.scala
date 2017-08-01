@@ -15,7 +15,7 @@ import org.apache.commons.io.FileUtils
   */
 object ContextLoader {
 
-  def loadContext() : {val language : Language
+  def loadContext(language: Language) : {val language : Language
                         val redirects : Redirects
                         val ontology: Ontology} = {
 

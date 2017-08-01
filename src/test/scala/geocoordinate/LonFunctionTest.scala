@@ -21,8 +21,9 @@ class LonFunctionTest extends FlatSpec with Matchers {
     val minutes = "lonm=51"
     val seconds = "lons=54"
     val direction = null
+    val language = "en"
 
-    val fn = new LonFunction(null, longitude, degrees, minutes, seconds, direction)
+    val fn = new LonFunction(null, longitude, degrees, minutes, seconds, direction, language)
     val result = fn.execute()
 
     result.head should be("33.865")
@@ -37,8 +38,9 @@ class LonFunctionTest extends FlatSpec with Matchers {
     val minutes = "lonm=51"
     val seconds = "lons=54"
     val direction = null
+    val language = "en"
 
-    val fn = new LonFunction(null, longitude, degrees, minutes, seconds, direction)
+    val fn = new LonFunction(null, longitude, degrees, minutes, seconds, direction, language)
     val result = fn.execute()
 
     result.head should be(null)
