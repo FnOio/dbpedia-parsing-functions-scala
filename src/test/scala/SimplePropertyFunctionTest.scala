@@ -142,6 +142,81 @@ class SimplePropertyFunctionTest extends FlatSpec with Matchers {
 
   }
 
+  "Titles " should "be extracted" in {
+
+    val property = "{{Ubl|[[Technical advisor|Technology Advisor]] of [[Microsoft|Microsoft]]|[[Chairman|Co-Chairman]] of the [[Bill & Melinda Gates Foundation|Bill & Melinda Gates Foundation]]|[[CEO|CEO]] of [[Cascade Investment|Cascade Investment]]|[[Chairman|Chairman]] of [[Branded Entertainment Network|Branded Entertainment Network]]|[[Chairman|Chairman]] of [[TerraPower|TerraPower]]}}"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "title"
+    val unit = null
+    val language = "en"
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
+    val result = fn.execute()
+
+    result.size should be > 0
+
+  }
+
+  "Parents " should "be extracted" in {
+
+    val property = "{{Ubl|[[William H. Gates Sr.|William H. Gates Sr.]]|[[Mary Maxwell Gates|Mary Maxwell Gates]]}}"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "parent"
+    val unit = null
+    val language = "en"
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
+    val result = fn.execute()
+
+    result.size should be > 0
+
+  }
+
+  "Netto value" should "be extracted as date" in {
+
+    val property = "[[US$|US$]]89.9 billion (27 July 2017)"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "birthDate"
+    val unit = null
+    val language = "en"
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
+    val result = fn.execute()
+    result.length should be (1)
+
+
+  }
+
+  "Homepage " should "be extracted" in {
+
+    val property = "[http://gatesnotes.com ]"
+    val select = null
+    val prefix = null
+    val suffix = null
+    val transform = null
+    val factor = 1.0
+    val datatype =  "http://xmlns.com/foaf/0.1/homepage"
+    val unit = null
+    val language = "en"
+
+    val fn = new SimplePropertyFunction(property, select, prefix, suffix,transform , factor, datatype, unit, language)
+    val result = fn.execute()
+    result.length should be (1)
+
+  }
+
   "A state" should "be parsed correctly" in {
     val property = "state1=Sichuan"
     val select = null

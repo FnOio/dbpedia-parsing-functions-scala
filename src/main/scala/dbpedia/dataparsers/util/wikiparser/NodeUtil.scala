@@ -150,6 +150,29 @@ object NodeUtil
                         currentNodes = child :: currentNodes
                     }
                 }
+
+            case t :TemplateNode => {
+
+                // TODO @wmaroy cleaner?
+
+                def addChildrenAsPropertyNodes() = {
+                    val children = t.children
+                    children.foreach(node => propertyNodes = node :: propertyNodes)
+                }
+
+                val title = t.title.decoded.toLowerCase()
+                title match {
+                    case "ubl" => addChildrenAsPropertyNodes()
+                    case "ubt" => addChildrenAsPropertyNodes()
+                    case "ublist" => addChildrenAsPropertyNodes()
+                    case "unbullet" => addChildrenAsPropertyNodes()
+                    case "unbulleted list" => addChildrenAsPropertyNodes()
+                    case _ =>
+                }
+
+
+            }
+
             case _ => currentNodes = child :: currentNodes
         }
 

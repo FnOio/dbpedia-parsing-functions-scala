@@ -5,9 +5,8 @@ import dbpedia.dataparsers.ontology.datatypes._
 import dbpedia.dataparsers.ontology.{Ontology, OntologyClass, OntologyDatatypes, OntologySingleton}
 import dbpedia.dataparsers.util.wikiparser.Namespace
 import dbpedia.dataparsers.util.wikiparser.impl.simple.SimpleWikiParser
-import dbpedia.dataparsers.util.{Language, Redirects}
+import dbpedia.dataparsers.util.{Language, RMLOntologyUtil, RdfNamespace, Redirects}
 import functions.Function
-
 
 import scala.collection.mutable.ListBuffer
 import scala.language.reflectiveCalls
@@ -29,19 +28,28 @@ class SimplePropertyFunction(
   private val datatypes = OntologySingleton.getDatatypes
 
 
-  private val ontologyProperty = try {
+
+
+  private val ontologyProperty = if(datatype != null) {
+    try {
       val result = ontologyObject.properties(datatype)
       result
     } catch {
-      case _ : Exception => null
+
+      case _: Exception => {
+        RMLOntologyUtil.loadOntologyPropertyFromIRI(datatype, ontologyObject)
+      }
     }
+  } else null
 
 
-  val ut = try {
-    datatypes.get(unit).get
-  } catch {
-    case _ : Exception => null
-  }
+  val ut = if(unit != null) {
+    try {
+      datatypes.get(unit).get
+    } catch {
+      case _ : Exception => RMLOntologyUtil.loadOntologyDataTypeFromIRI(unit, ontologyObject)
+    }
+  } else null
 
     private val languageObject = Language(language)
     private val wikiparser = new SimpleWikiParser
