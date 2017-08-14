@@ -43,7 +43,7 @@ class SimplePropertyFunction(
     case _ : Exception => null
   }
 
-    private val languageObject = Language("nl")
+    private val languageObject = Language(language)
     private val wikiparser = new SimpleWikiParser
 
     val context = new {
@@ -187,10 +187,10 @@ class SimplePropertyFunction(
     }
 
     def execute(): Seq[String] = {
-      val node = wikiparser.parseProperty(templateProperty, languageObject)
+      val node = wikiparser.parseProperty(templateProperty, languageObject)//languageObject)
       var result = new ListBuffer[String]
       if(parser != null) {
-        val parseResults = parser.parsePropertyNode(node, true, transform, valueTransformer)
+        val parseResults = parser.parsePropertyNode(node, !ontologyProperty.isFunctional, transform, valueTransformer)
         for (parseResult <- selector(parseResults)) {
           val g = parseResult match {
             case (value: Double, unit: UnitDatatype) => {
